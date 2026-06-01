@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-export default function Home() {
+export default function LoginForm({ onLoginSuccess}) {
     const [usr, setUsr] = useState("");
     const [psw, setPsw] = useState("");
     const [result, setResult] = useState("");
@@ -14,6 +14,10 @@ export default function Home() {
         });
         const data = await res.json();
         setResult(data.message);
+
+        if (data.message === "YUPPEE!") {
+            onLoginSuccess();
+        }
     }
 
     return (
