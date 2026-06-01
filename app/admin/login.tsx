@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 
+// @ts-ignore
 export default function LoginForm({ onLoginSuccess}) {
     const [usr, setUsr] = useState("");
     const [psw, setPsw] = useState("");
