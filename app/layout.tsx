@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { cookies } from "next/headers"
+import Topbar from "@/compontents/Topbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,26 +26,14 @@ export default async function RootLayout({
 }>) {
     const cookie = await cookies();
     const isLoggedIn = cookie.has("auth_session");
-    
-
-  return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}
-      {isLoggedIn && (
-          <div className="flex flex-col">
-              <span className="font-bold text-slate-200">Admin Console</span>
-              <div className="space-x-4 text-sm text-slate-400">
-                  <a href="/op-admin/dashboard" className="hover:text-white">Dashboard</a>
-                  <a href="/op-admin/settings" className="hover:text-white">Settings</a>
-              </div>
-          </div>
 
 
-      )}
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+        <body className="min-h-full flex flex-col">
+        <Topbar isLoggedIn={isLoggedIn} />
+        {children}
+        </body>
+        </html>
+    );
 }
