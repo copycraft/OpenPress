@@ -14,4 +14,4 @@ export default function Textarea({value, onChange, placeholder, rows = 4}: Props
             onChange={(e) => onChange(e.target.value)}
         />
     );
-}
+} //ai
