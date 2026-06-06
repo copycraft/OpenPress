@@ -1,11 +1,18 @@
 "use client";
 import { useState } from "react";
 import { AnimatePresence, motion} from "framer-motion";
+import { useRouter } from "next/navigation";
 import LoginForm from "./login"
-
+import Spinner from "@/compontents/ui/Spinner";
 
 export default function Home() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const router = useRouter();
+
+    function handleLoginSuccess() {
+        setIsLoggedIn(true);
+        setTimeout(() => router.push("/op-admin/dashboard"), 300)
+    }
 
     return (
         <main className="main bg-slate-950 min-h-screen">
@@ -18,7 +25,7 @@ export default function Home() {
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                     >
-                        <LoginForm onLoginSuccess={() => setIsLoggedIn(true)} />
+                        <LoginForm onLoginSuccess={handleLoginSuccess} />
                     </motion.div>
                 ) : (
                     <motion.div
@@ -29,9 +36,7 @@ export default function Home() {
                         transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
                         className="flex flex-col items-center justify-center min-h-screen bg-slate-950 text-white p-4"
                     >
-                        <h1 className="text-4xl font-bold text-center text-white tracking-tight">
-                            ADMIN PAGE
-                        </h1>
+                        <Spinner />
                     </motion.div>
                 )}
             </AnimatePresence>
