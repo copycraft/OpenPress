@@ -7,12 +7,15 @@ interface Props {
     onChange: (data: Record<string, string>) => void;
     onInsertAfter: (type: BlockType) => void;
     onDelete: () => void;
+    onFocus: () => void;
+    onBlur: () => void;
 }
 //fuck this, i am pasting ai, THIS IS SO FUCKING CONFUSING
-export default function BlockWrapper({ block, selected, onSelect, onChange, onInsertAfter, onDelete }: Props) {
+
+export default function BlockWrapper({ block, selected, onSelect, onChange, onInsertAfter, onDelete, onFocus, onBlur }: Props) {
     const Component = registry[block.type].component;
     return (
-        <div onClick={onSelect}>
+        <div onClick={onSelect} onFocus={onFocus} onBlur={onBlur}>
             <Component data={block.data} onChange={onChange} />
             <button onClick={(e) => { e.stopPropagation(); onDelete(); }}>delete</button>
             {selected && (

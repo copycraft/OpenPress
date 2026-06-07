@@ -1,11 +1,6 @@
-interface ImageData {
-    src: string;
-    alt: string;
-}
-
 interface Props {
-    data: ImageData;
-    onChange: (imageData: ImageData) => void;
+    data: Record<string, string>;
+    onChange: (data: Record<string, string>) => void;
 }
 
 export default function Image({ data, onChange }: Props) {
@@ -29,11 +24,15 @@ export default function Image({ data, onChange }: Props) {
             <div style={{ fontSize: 11, color: "var(--op-muted)", marginBottom: 8, fontFamily: "var(--font-mono)", textTransform: "uppercase", letterSpacing: "0.08em" }}>IMG</div>
 
             {data.src ? (
-                <div>
-                    <img src={data.src} alt={data.alt} style={{ maxWidth: "100%", display: "block", marginBottom: 8 }} />
+                <div style={{ textAlign: (data.align as "left" | "center" | "right") || "left" }}>
+                    <img
+                        src={data.src}
+                        alt={data.alt}
+                        style={{ width: data.width || "100%", display: "block", marginBottom: 8 }}
+                    />
                     <input
                         type="text"
-                        value={data.alt}
+                        value={data.alt ?? ""}
                         placeholder="alt text..."
                         onChange={(e) => onChange({ ...data, alt: e.target.value })}
                     />

@@ -19,6 +19,8 @@ import {
     useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import Library from "@/components/editor/Library";
+import SettingsPanel from "@/components/editor/SettingsPanel";
 
 function uid() {
     return Math.random().toString(36).substr(2, 9);
@@ -29,13 +31,15 @@ interface Props {
     onSave?: (blocks: Block[]) => void;
 }
 
-function SortableBlock({ block, selected, onSelect, onChange, onInsertAfter, onDelete }: {
+function SortableBlock({ block, selected, onSelect, onChange, onInsertAfter, onDelete, onFocus, onBlur }: {
     block: Block;
     selected: boolean;
     onSelect: () => void;
     onChange: (data: Record<string, string>) => void;
     onInsertAfter: (type: BlockType) => void;
     onDelete: () => void;
+    onFocus: () => void;
+    onBlur: () => void;
 }) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: block.id });
 
@@ -52,14 +56,12 @@ function SortableBlock({ block, selected, onSelect, onChange, onInsertAfter, onD
                 marginBottom: 4,
             }}
         >
-            {/* drag handle */}
             <span
                 {...listeners}
                 {...attributes}
                 style={{ cursor: "grab", color: "var(--op-muted)", paddingTop: 8, flexShrink: 0, userSelect: "none" }}
             >⠿</span>
 
-            {/* block content */}
             <div style={{ flex: 1 }}>
                 <BlockWrapper
                     block={block}
@@ -68,10 +70,11 @@ function SortableBlock({ block, selected, onSelect, onChange, onInsertAfter, onD
                     onChange={onChange}
                     onInsertAfter={onInsertAfter}
                     onDelete={onDelete}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
                 />
             </div>
 
-            {/* actions on the right */}
             <div style={{ display: "flex", flexDirection: "column", gap: 4, flexShrink: 0, paddingTop: 4 }}>
                 {Object.keys(registry).map((type) => (
                     <button
@@ -99,12 +102,12 @@ export default function Editor({ initialBlocks, onSave }: Props) {
     const [selected, setSelected] = useState<string | null>(null);
     const [libraryOpen, setLibraryOpen] = useState(true);
     const [draggingType, setDraggingType] = useState<BlockType | null>(null);
+    const [focusing, setFocusing] = useState(false);
 
     const sensors = useSensors(useSensor(PointerSensor));
 
     function handleDragStart(event: DragStartEvent) {
         const id = event.active.id as string;
-        // if it starts with "library:" it's from the library
         if (id.startsWith("library:")) {
             setDraggingType(id.replace("library:", "") as BlockType);
         }
@@ -113,26 +116,20 @@ export default function Editor({ initialBlocks, onSave }: Props) {
     function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
         setDraggingType(null);
-
         const activeId = active.id as string;
 
-        // dragging from library into editor
         if (activeId.startsWith("library:")) {
             const type = activeId.replace("library:", "") as BlockType;
             const newBlock: Block = { id: uid(), type, data: { ...registry[type].defaultData } };
-
             if (over && !String(over.id).startsWith("library:")) {
-                // drop onto a block — insert after it
                 const idx = blocks.findIndex((b) => b.id === over.id);
                 setBlocks((bs) => [...bs.slice(0, idx + 1), newBlock, ...bs.slice(idx + 1)]);
             } else {
-                // drop anywhere else — append
                 setBlocks((bs) => [...bs, newBlock]);
             }
             return;
         }
 
-        // reordering existing blocks
         if (over && activeId !== over.id) {
             setBlocks((bs) => {
                 const oldIdx = bs.findIndex((b) => b.id === activeId);
@@ -170,26 +167,16 @@ export default function Editor({ initialBlocks, onSave }: Props) {
         >
             <div style={{ display: "flex", gap: 0, minHeight: "100vh" }}>
 
-                {/* library panel */}
-                {libraryOpen && (
-                    <div style={{
-                        width: 160,
-                        flexShrink: 0,
-                        background: "var(--op-library-bg)",
-                        borderRight: "1px solid var(--op-border)",
-                        padding: 12,
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 6,
-                    }}>
-                        <span style={{ fontSize: 11, fontFamily: "var(--font-mono)", color: "var(--op-muted)", marginBottom: 4 }}>blocks</span>
-                        {Object.keys(registry).map((type) => (
-                            <LibraryItem key={type} type={type as BlockType} onClick={() => addBlock(type as BlockType)} />
-                        ))}
-                    </div>
-                )}
+                {selected ? (() => {
+                    const block = blocks.find((b) => b.id === selected);
+                    return block ? (
+                        <SettingsPanel
+                            block={block}
+                            onChange={(data) => updateBlock(block.id, data)}
+                        />
+                    ) : null;
+                })() : libraryOpen && <Library onAdd={addBlock} />}
 
-                {/* toggle button */}
                 <button
                     onClick={() => setLibraryOpen((o) => !o)}
                     style={{ alignSelf: "flex-start", margin: 8, padding: "4px 8px", fontSize: 12 }}
@@ -197,7 +184,6 @@ export default function Editor({ initialBlocks, onSave }: Props) {
                     {libraryOpen ? "←" : "→"}
                 </button>
 
-                {/* editor area */}
                 <div style={{ flex: 1, padding: 16 }}>
                     <SortableContext items={blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
                         {blocks.map((block) => (
@@ -209,6 +195,8 @@ export default function Editor({ initialBlocks, onSave }: Props) {
                                 onChange={(data) => updateBlock(block.id, data)}
                                 onInsertAfter={(type) => insertAfter(block.id, type)}
                                 onDelete={() => deleteBlock(block.id)}
+                                onFocus={() => setFocusing(true)}
+                                onBlur={() => setFocusing(false)}
                             />
                         ))}
                     </SortableContext>
@@ -229,7 +217,6 @@ export default function Editor({ initialBlocks, onSave }: Props) {
 
             </div>
 
-            {/* drag overlay — shows what you're dragging */}
             <DragOverlay>
                 {draggingType && (
                     <div style={{
@@ -246,36 +233,5 @@ export default function Editor({ initialBlocks, onSave }: Props) {
                 )}
             </DragOverlay>
         </DndContext>
-    );
-}
-
-function LibraryItem({ type, onClick }: { type: BlockType; onClick: () => void }) {
-    const { attributes, listeners, setNodeRef, isDragging } = useSortable({ id: `library:${type}` });
-
-    return (
-        <div
-            ref={setNodeRef}
-            {...attributes}
-            style={{ opacity: isDragging ? 0.4 : 1 }}
-        >
-            <button
-                {...listeners}
-                onClick={onClick}
-                style={{
-                    width: "100%",
-                    textAlign: "left",
-                    cursor: "grab",
-                    background: "none",
-                    border: "1px solid var(--op-border)",
-                    padding: "6px 10px",
-                    borderRadius: 4,
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 13,
-                    color: "var(--foreground)",
-                }}
-            >
-                ⠿ {type}
-            </button>
-        </div>
     );
 }
