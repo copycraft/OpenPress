@@ -25,7 +25,11 @@ export async function POST(request: Request) {
         await writeFile(absolutePath, buffer);
         db.prepare("INSERT INTO media (filename, filepath) VALUES (?, ?)")
             .run(uniqueFilename, absolutePath);
-        return NextResponse.json({success: true, message: "YUPPEEE! FILE SAVED!!"});
+        return NextResponse.json({
+            success: true,
+            message: "YUPPEEE! FILE SAVED!!",
+            url: `/media/uploads/${uniqueFilename}`
+        });
     } catch (error) {
         console.error("ERROR(if this is not me, dm me on slack or create a github issue)", error)
         return NextResponse.json(
