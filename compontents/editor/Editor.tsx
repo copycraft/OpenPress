@@ -8,11 +8,11 @@ function uid() {
 
 interface Props {
     initialBlocks?: Block[];
-    onSave? (blocks: Block[]) => void;
+    onSave? : (blocks: Block[]) => void;
 }
 
 export default function Editor({ initialBlocks, onSave }: Props) {
-    const [blocks, setBlocks] = useState<Block[]>([]);
+    const [blocks, setBlocks] = useState<Block[]>(initialBlocks ?? []);
     const [selected, setSelected] = useState<BlockType | null>(null);
     const [libraryOpen, setLibraryOpen] = useState(true);
 
@@ -30,6 +30,7 @@ export default function Editor({ initialBlocks, onSave }: Props) {
     }
     function addBlock(type: BlockType) {
         const newBlock: Block = { id: uid(), type, data : { ...registry[type].defaultData } };
+        setBlocks((bs) => [...bs, newBlock]);
     }
 
     //again, im sorry i wont even try
