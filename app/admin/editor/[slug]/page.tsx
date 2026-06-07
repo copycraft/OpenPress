@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
-import Editor from "@/compontents/editor/Editor";
+import Editor from "@/components/editor/Editor";
 
 interface Page {
     title: string;

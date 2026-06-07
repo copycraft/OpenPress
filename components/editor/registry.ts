@@ -1,6 +1,6 @@
-import Heading from "@/compontents/editor/blocks/Heading";
-import Paragraph from "@/compontents/editor/blocks/Paragraph";
-import Image from "@/compontents/editor/blocks/Image";
+import Heading from "@/components/editor/blocks/Heading";
+import Paragraph from "@/components/editor/blocks/Paragraph";
+import Image from "@/components/editor/blocks/Image";
 
 export const registry = {
     heading: {

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { AnimatePresence, motion} from "framer-motion";
 import { useRouter } from "next/navigation";
 import LoginForm from "./login"
-import Spinner from "@/compontents/ui/Spinner";
+import Spinner from "@/components/ui/Spinner";
 
 export default function Home() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
