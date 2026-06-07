@@ -1,13 +1,17 @@
 import {useState} from 'react';
 import { Block, BlockType, registry} from "@/compontents/editor/registry";
 import BlockWrapper from "@/compontents/editor/BlockWrapper";
-import {data} from "framer-motion/m";
 
 function uid() {
     return Math.random().toString(36).substr(2, 9);
 }
 
-export default function Editor() {
+interface Props {
+    initialBlocks?: Block[];
+    onSave? (blocks: Block[]) => void;
+}
+
+export default function Editor({ initialBlocks, onSave }: Props) {
     const [blocks, setBlocks] = useState<Block[]>([]);
     const [selected, setSelected] = useState<BlockType | null>(null);
     const [libraryOpen, setLibraryOpen] = useState(true);
@@ -31,8 +35,6 @@ export default function Editor() {
     //again, im sorry i wont even try
     return (
         <div style={{ display: "flex", gap: 16 }}>
-
-            {/* editor area */}
             <div style={{ flex: 1 }}>
                 {blocks.map((block) => (
                     <BlockWrapper
@@ -46,14 +48,13 @@ export default function Editor() {
                     />
                 ))}
                 {blocks.length === 0 && <p>no blocks yet, add one from the library →</p>}
+                {onSave && <button onClick={() => onSave(blocks)}>save</button>}
             </div>
 
-            {/* library sidebar */}
             <div style={{ width: libraryOpen ? 200 : 32, flexShrink: 0, transition: "width 0.2s" }}>
                 <button onClick={() => setLibraryOpen((o) => !o)}>
                     {libraryOpen ? "→ close" : "←"}
                 </button>
-
                 {libraryOpen && (
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8 }}>
                         {Object.keys(registry).map((type) => (
@@ -64,7 +65,6 @@ export default function Editor() {
                     </div>
                 )}
             </div>
-
         </div>
     );
 }
