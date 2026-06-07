@@ -238,3 +238,23 @@ td {
         --op-library-bg: #111827;
     }
 }
+
+h1 {
+    font-size: 32px;
+    font-weight: 700;
+    font-family: var(--font-sans);
+    margin-bottom: 16px;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    margin-bottom: 12px;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
