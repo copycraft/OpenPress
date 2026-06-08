@@ -4,6 +4,21 @@ import {existsSync} from "node:fs";
 import path from "path";
 import db from "@/app/lib/auth/db";
 
+export async function GET() {
+    try {
+        const rows = db.prepare("SELECT * FROM media ORDER BY id DESC").all() as any[];
+        const media = rows.map(row => ({
+            id: row.id.toString(),
+            url: `/media/uploads/${row.filename}`,
+            name: row.filename
+        }));
+        return NextResponse.json({success: true, media})
+    } catch(error) {
+        console.error("GET MEDIA ERROR: ", error);
+        return NextResponse.json({success: false, error: error});
+    }
+}
+
 export async function POST(request: Request) {
     try {
         const formData = await request.formData();
