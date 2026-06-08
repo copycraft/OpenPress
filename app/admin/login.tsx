@@ -1,8 +1,11 @@
 "use client";
 import { useState } from "react";
 
-// @ts-ignore
-export default function LoginForm({ onLoginSuccess}) {
+interface LoginFormProps {
+    onLoginSuccess: () => void;
+}
+
+export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
     const [usr, setUsr] = useState("");
     const [psw, setPsw] = useState("");
     const [result, setResult] = useState("");
@@ -22,10 +25,10 @@ export default function LoginForm({ onLoginSuccess}) {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-slate-950 text-white p-4">
-            <div className="w-full max-w-xs bg-slate-900 border border-slate-800 p-6 rounded-xl space-y-4 shadow-2xl">
+        <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-[var(--bg-base)] text-[var(--text-primary)]">
+            <div className="w-full max-w-xs p-6 rounded-xl space-y-4 shadow-2xl bg-[var(--bg-surface)] border border-[var(--bg-border)]">
 
-                <h1 className="text-2xl font-bold text-center tracking-tight text-slate-200">
+                <h1 className="text-2xl font-bold text-center tracking-tight text-[var(--text-primary)]">
                     Administrator
                 </h1>
 
@@ -34,7 +37,7 @@ export default function LoginForm({ onLoginSuccess}) {
                         placeholder="Username"
                         value={usr}
                         onChange={e => setUsr(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg outline-none focus:border-blue-500 transition text-sm"
+                        className="w-full px-3 py-2 rounded-lg outline-none transition text-sm bg-[var(--bg-base)] border border-[var(--bg-border)] focus:border-[var(--brand-primary)] text-[var(--text-primary)] placeholder-[var(--text-muted)]"
                     />
 
                     <input
@@ -42,20 +45,20 @@ export default function LoginForm({ onLoginSuccess}) {
                         value={psw}
                         onChange={e => setPsw(e.target.value)}
                         type="password"
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg outline-none focus:border-blue-500 transition text-sm"
+                        className="w-full px-3 py-2 rounded-lg outline-none transition text-sm bg-[var(--bg-base)] border border-[var(--bg-border)] focus:border-[var(--brand-primary)] text-[var(--text-primary)] placeholder-[var(--text-muted)]"
                     />
                 </div>
 
                 <button
                     onClick={checkLogin}
-                    className="w-full py-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 font-semibold rounded-lg transition text-sm"
+                    className="w-full py-2 font-semibold rounded-lg transition text-sm bg-[var(--brand-primary)] hover:bg-[var(--bg-hover)] active:bg-[var(--brand-secondary)] text-[var(--text-primary)]"
                 >
                     Login
                 </button>
 
                 {result && (
-                    <p className={`text-center text-sm font-bold mt-2 ${result === "YUPPEE!" ? "text-emerald-400" : "text-rose-400"}`}>
-                        {result}
+                    <p className={`text-center text-sm font-bold mt-2 ${result === "YUPPEE!" ? "text-[var(--accent-teal)]" : "text-[var(--accent-amber)]"}`}>
+                        {result === "YUPPEE!" ? "Success!" : result}
                     </p>
                 )}
 

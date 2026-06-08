@@ -1,17 +1,25 @@
-interface Props {
+interface TableProps {
     headers: string[];
     rows: React.ReactNode[][];
 }
 
-export default function Table({ headers, rows }: Props) {
+export default function Table({ headers, rows }: TableProps) {
     return (
         <table>
             <thead>
-            <tr>{headers.map((h) => <th key={h}>{h}</th>)}</tr>
+            <tr>
+                {headers.map((header, index) => (
+                    <th key={`${header}-${index}`}>{header}</th>
+                ))}
+            </tr>
             </thead>
             <tbody>
-            {rows.map((row, i) => (
-                <tr key={i}>{row.map((cell, j) => <td key={j}>{cell}</td>)}</tr>
+            {rows.map((row, rowIndex) => (
+                <tr key={rowIndex}>
+                    {row.map((cell, cellIndex) => (
+                        <td key={cellIndex}>{cell}</td>
+                    ))}
+                </tr>
             ))}
             </tbody>
         </table>

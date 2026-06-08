@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion} from "framer-motion";
 import { useRouter } from "next/navigation";
-import LoginForm from "./login"
+import LoginForm from "./login";
 import Spinner from "@/components/ui/Spinner";
 
 export default function Home() {
@@ -11,11 +11,12 @@ export default function Home() {
 
     function handleLoginSuccess() {
         setIsLoggedIn(true);
-        setTimeout(() => router.push("/op-admin/dashboard"), 300)
+        // Clean timing window to match the framer exit animations
+        setTimeout(() => router.push("/op-admin/dashboard"), 300);
     }
 
     return (
-        <main className="main bg-slate-950 min-h-screen">
+        <main className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)]">
             <AnimatePresence mode="wait">
                 {!isLoggedIn ? (
                     <motion.div
@@ -34,7 +35,7 @@ export default function Home() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
-                        className="flex flex-col items-center justify-center min-h-screen bg-slate-950 text-white p-4"
+                        className="flex flex-col items-center justify-center min-h-screen p-4 bg-[var(--bg-base)]"
                     >
                         <Spinner />
                     </motion.div>
