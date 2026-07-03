@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/app/lib/editor-db";
+import db from "@/app/lib/db/editor-db";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;

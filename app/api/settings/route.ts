@@ -1,5 +1,5 @@
 import { NextResponse} from "next/server";
-import db from "@/app/lib/editor-db"
+import db from "@/app/lib/db/editor-db"
 
 export async function GET() {
     const rows = db.prepare("SELECT key, value FROM settings").all() as {key: string, value: string}[];

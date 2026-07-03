@@ -1,4 +1,4 @@
-import db from "@/app/lib/editor-db";
+import db from "@/app/lib/db/editor-db";
 import { notFound } from "next/navigation";
 import {marked} from "marked";
 

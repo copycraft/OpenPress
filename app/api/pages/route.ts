@@ -1,5 +1,5 @@
 import { NextResponse} from "next/server"
-import db from "@/app/lib/editor-db";
+import db from "@/app/lib/db/editor-db";
 import { createUniqueSlug} from "@/app/lib/slug-tool";
 
 export async function GET() {

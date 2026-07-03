@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import db from "../../lib/auth/db";
+import db from "../../lib/db/db";
 import {cookies} from "next/headers";
 
 export async function POST(request: Request) {

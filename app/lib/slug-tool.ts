@@ -1,4 +1,4 @@
-import db from "./editor-db";
+import db from "./db/editor-db";
 
 export function generateSlug(title:string): string{
     return title
