@@ -1,12 +1,13 @@
 import db from "@/app/lib/editor-db";
 import { notFound } from "next/navigation";
+import {marked} from "marked";
 
 interface PageRow {
     title: string;
     content: string;
 }
 
-function parseCustomCss(css: string): Record<string, string> {
+function parseCustomCss(css: string): React.CSSProperties {
     if (!css) return {};
     return Object.fromEntries(
         css.split(";")
@@ -14,7 +15,7 @@ function parseCustomCss(css: string): Record<string, string> {
             .map(s => s.split(":").map(p => p.trim()))
             .filter(([k, v]) => k && v)
             .map(([k, v]) => [k.replace(/-([a-z])/g, (_, c) => c.toUpperCase()), v])
-    );
+    ) as React.CSSProperties;
 }
 
 export default async function PublicPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -37,27 +38,13 @@ export default async function PublicPage({ params }: { params: Promise<{ slug: s
                         ...parseCustomCss(block.data.customCss ?? ""),
                     };
 
-                    if (block.type === "heading") {
+                    if (block.type === "text") {
                         return (
-                            <h1
-                                key={block.id}
-                                style={dynamicStyles}
-                                className="text-3xl font-bold tracking-tight text-[var(--text-primary)] m-0"
-                            >
-                                {block.data.text}
-                            </h1>
-                        );
-                    }
-
-                    if (block.type === "paragraph") {
-                        return (
-                            <p
-                                key={block.id}
-                                style={dynamicStyles}
-                                className="text-base leading-relaxed text-[var(--text-muted)] m-0"
-                            >
-                                {block.data.text}
-                            </p>
+                            <div
+                                key = {block.id}
+                                style = {dynamicStyles}
+                                dangerouslySetInnerHTML={{ __html: marked.parse(block.data.text || "") }}
+                            />
                         );
                     }
 
