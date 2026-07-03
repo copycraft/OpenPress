@@ -1,5 +1,4 @@
-import Heading from "@/components/editor/blocks/Heading";
-import Paragraph from "@/components/editor/blocks/Paragraph";
+import Text from "@/components/editor/blocks/Text";
 import Image from "@/components/editor/blocks/Image";
 
 export type SettingField = {
@@ -10,17 +9,8 @@ export type SettingField = {
 }
 
 export const registry = {
-    heading: {
-        component: Heading,
-        defaultData: {text:"", fontSize : "32", align:"left", customCss:""},
-        label: "heading",
-        settings: [
-            {key:"fontSize", label: "fontSize", type: "number"},
-            {key:"align", label:"alignment", type: "select", options: ["left", "center", "right"]},
-        ] as SettingField[]
-    },
-    paragraph: {
-        component: Paragraph,
+    text: {
+        component: Text,
         defaultData: {text:"", fontSize : "16", align:"left", customCss:""},
         label: "paragraph",
         settings: [

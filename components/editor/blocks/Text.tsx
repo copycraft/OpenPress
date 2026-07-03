@@ -3,7 +3,7 @@ interface Props {
     onChange: (data: Record<string, string>) => void;
 }
 
-export default function Paragraph({ data, onChange }: Props) {
+export default function Text({ data, onChange }: Props) {
     return (
         <div>
             <div style={{ fontSize: 11, color: "var(--op-muted)", marginBottom: 6, fontFamily: "var(--font-mono)", textTransform: "uppercase", letterSpacing: "0.08em" }}>P</div>
