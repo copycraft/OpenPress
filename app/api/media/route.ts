@@ -2,7 +2,7 @@ import {NextRequest, NextResponse} from "next/server";
 import {writeFile, mkdir} from "fs/promises";
 import {existsSync} from "node:fs";
 import path from "path";
-import db from "@/app/lib/db/db";
+import db from "@/app/lib/db/media";
 
 export async function GET() {
     try {
